@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frontend Mentor | Contact form</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: hsl(148, 38%, 91%);
+      font-family: 'Karla', sans-serif;
+      margin-top: 20px;
+    }
+
+    .main {
+      background-color: hsl(0, 0%, 100%);
+      width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    .name-fields {
+      display: flex;
+      gap: 15px;
+    }
+
+    .name-fields .field {
+      flex: 1;
+    }
+
+    @media (max-width: 480px) {
+      .name-fields {
+        flex-direction: column;
+      }
+
+      .radio-boxes {
+        flex-direction: column;
+      }
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .error {
+      color: hsl(0, 70%, 50%);
+      font-size: 13px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .radio-group {
+      margin-top: 20px;
+    }
+
+    .radio-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .radio-boxes {
+      display: flex;
+      gap: 15px;
+    }
+
+    .radio-option {
+      flex: 1;
+      background-color: hsl(148, 38%, 91%);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: hsl(169, 82%, 27%);
+    }
+
+    .consent {
+      margin-top: 20px;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: hsl(169, 82%, 27%);
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+    }
+
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+
+    #successMessage {
+      display: none;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      background-color: hsl(169, 82%, 27%);
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <h1>Contact Us</h1>
+
+    <div id="successMessage">* Message sent! Thanks for completing the form. We'll be in touch!</div>
+
+    <form id="contactForm" novalidate>
+      <div class="name-fields">
+        <div class="field">
+          <label for="firstName">First Name *</label>
+          <input type="text" id="firstName" name="firstName" />
+          <span class="error" id="firstNameError"></span>
+        </div>
+        <div class="field">
+          <label for="lastName">Last Name *</label>
+          <input type="text" id="lastName" name="lastName" />
+          <span class="error" id="lastNameError"></span>
+        </div>
+      </div>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" />
+      <span class="error" id="emailError"></span>
+
+      <div class="radio-group">
+        <p class="radio-label">Query Type *</p>
+        <div class="radio-boxes">
+          <label class="radio-option" for="general">
+            <input type="radio" id="general" name="query" value="general" />
+            General Enquiry
+          </label>
+          <label class="radio-option" for="request">
+            <input type="radio" id="request" name="query" value="request" />
+            Support Request
+          </label>
+        </div>
+        <span class="error" id="queryError"></span>
+      </div>
+
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" placeholder="This field is required"></textarea>
+      <span class="error" id="messageError"></span>
+
+      <div class="consent">
+        <label>
+          <input type="checkbox" name="consent" id="consent" />
+          I consent to being contacted by the team *
+        </label>
+        <span class="error" id="consentError"></span>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
+    Coded by <a href="#">jane-chizzy</a>.
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const successMessage = document.getElementById('successMessage');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Clear all error messages
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+      let isValid = true;
+
+      const firstName = form.firstName;
+      const lastName = form.lastName;
+      const email = form.email;
+      const query = form.query;
+      const message = form.message;
+      const consent = form.consent;
+
+      if (firstName.value.trim() === '') {
+        document.getElementById('firstNameError').textContent = 'This field is required';
+        isValid = false;
+      }
+
+      if (lastName.value.trim() === '') {
+        document.getElementById('lastNameError').textContent = 'This field is required';
+        isValid = false;
+      }
+
+      if (email.value.trim() === '' || !email.validity.valid) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+        isValid = false;
+      }
+
+      if (!form.query.value) {
+        document.getElementById('queryError').textContent = 'Select a query type';
+        isValid = false;
+      }
+
+      if (message.value.trim() === '') {
+        document.getElementById('messageError').textContent = 'This field is required';
+        isValid = false;
+      }
+
+      if (!consent.checked) {
+        document.getElementById('consentError').textContent = 'To submit this form, consent to be contacted';
+        isValid = false;
+      }
+
+      if (isValid) {
+        successMessage.style.display = 'block';
+        form.reset();
+      } else {
+        successMessage.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
